@@ -105,8 +105,11 @@ df_data = pd.DataFrame(data)
 
 #%%
 from sklearn.feature_selection import SelectKBest
-skb = SelectKBest(k=150)
+skb = SelectKBest(k=130)
 topft = skb.fit_transform(df_data, y_train)
+data = topft
+topft_test = skb.transform(test_data)
+test_data = topft_test
 #%%plot data to check feature importance 
 plotdf = X_train.dropna()
 
@@ -120,6 +123,11 @@ from sklearn.ensemble import RandomForestRegressor
 rf_reg = RandomForestRegressor()
 rf_reg.fit(data, y_train)
 y_pred = rf_reg.predict(test_data)
+li = [x+1461 for x in range(len(y_pred))]
+res = pd.DataFrame(y_pred)
+res['id'] = li
+res.set_index('id',inplace=True)
+res.to_csv('res.csv')
 """#%%
 from sklearn.metrics import accuracy_score, recall_score, precision_score
 acc = accuracy_score(y_testing, y_pred)
